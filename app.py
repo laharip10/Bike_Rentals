@@ -144,6 +144,16 @@ insert_multiple_bikes(bikes_to_insert)
 def index():
     return render_template('index.html')
 
+# Route to display bike models
+@app.route('/model')
+def display_bike_models():
+    conn = sqlite3.connect('bike_rental.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM Models')
+    models = cursor.fetchall()
+    conn.close()
+    return render_template('model.html', models=models)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
