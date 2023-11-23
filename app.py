@@ -139,6 +139,11 @@ bikes_to_insert = [
 # Usage:
 insert_multiple_bikes(bikes_to_insert)
 
+# Home page
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

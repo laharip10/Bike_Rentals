@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rental Management</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='index.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='body.css')}}" >
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Rental Management</h1>
+        <ul>
+            <li><a href="/rent">Rentals</a></li>
+            <li><a href="/customer">Customers</a></li>
+            <li><a href="/bike">Bikes</a></li>
+            <li><a href="/model">Model</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div>
+        <h1>Welcome to Rental Management</h1>
+        <p>This is your Rental Management page.</p>
+        </div>
+        <div>
+            <h2> Group Details</h2>
+            <h3>
+                Group 10
+                <br>
+                CS-665 Introduction Database Systems
+            </h3>
+            <ul class="fnt">
+                <li>Lahari Padiri (M868N869)</li>
+                <li>Chaitanyasai Kotturi (C434N596)</li>
+                <li>Showkath Ali Shaik (E242X245)</li>
+            </ul>
+    </div>
+    <br>
+    <div>Bike Insights <br>
+        <div><br>
+        <a href="/count">Rented Bikes</a>
+        <a href="/cust_bike">Customer & Bikes</a>
+        </div>
+     </div>
+    </div>
+    </div>
+
+        <div class="footer">
+            <p>Group 10 CS-665  ,    All Rights Reserved &copy; 2023</p>
+        </div>
+</body>
+</html>
