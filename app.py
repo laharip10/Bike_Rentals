@@ -154,6 +154,76 @@ def display_bike_models():
     conn.close()
     return render_template('model.html', models=models)
 
+# Route to add a new bike model
+@app.route('/add_model', methods=['GET', 'POST'])
+def add_model():
+    conn = sqlite3.connect('bike_rental.db')
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        model_name = request.form['model_name']
+        manufacturer = request.form['manufacturer']
+        year = int(request.form['year'])
+        
+        current_year = datetime.now().year
+        
+        if year > current_year:
+            conn.close()
+            return "Year should not be greater than the current year"
+        else:
+            cursor.execute('''
+                INSERT INTO Models (Model_Name, Manufacturer, Year)
+                VALUES (?, ?, ?)
+            ''', (model_name, manufacturer, year))
+            
+            conn.commit()
+            conn.close()
+            return redirect('/model')
+    
+    conn.close()
+    return render_template('model_add.html')
+
+# Route to edit a bike model
+@app.route('/edit_model/<int:model_id>', methods=['GET', 'POST'])
+def edit_model(model_id):
+    conn = sqlite3.connect('bike_rental.db')
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        model_name = request.form['model_name']
+        manufacturer = request.form['manufacturer']
+        year = request.form['year']
+        
+        cursor.execute('''
+            UPDATE Models
+            SET Model_Name=?, Manufacturer=?, Year=?
+            WHERE Model_ID=?
+        ''', (model_name, manufacturer, year, model_id))
+        
+        conn.commit()
+        conn.close()  # Close connection after commit
+        return redirect('/model')
+    
+    cursor.execute('SELECT * FROM Models WHERE Model_ID=?', (model_id,))
+    bike_model = cursor.fetchone()
+    conn.close()  # Close connection after fetching data
+    return render_template('model_edit.html', model=bike_model)
+
+
+@app.route('/delete_model/<int:model_id>')
+def delete_model(model_id):
+    try:
+        conn = sqlite3.connect('bike_rental.db')
+        cursor = conn.cursor()
+        cursor.execute('''DELETE FROM Models WHERE Model_ID = ?''', (model_id,))
+        conn.commit()
+    except sqlite3.Error as e:
+        print("SQLite error:", e)
+        # Handle the error appropriately (rollback transaction, log, etc.)
+    finally:
+        conn.close()
+    return redirect('/model')
+ 
 
 if __name__ == '__main__':
     app.run(debug=True)
