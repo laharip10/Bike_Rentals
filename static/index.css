@@ -1,0 +1,80 @@
+/* Resetting default margin and padding */
+body, ul {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Styling the navigation bar */
+.navbar {
+    background-color: #333;
+    color: white;
+    text-align: center;
+}
+
+.navbar h1 {
+    padding: 20px;
+    margin: 0;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar ul li {
+    display: inline;
+}
+
+.navbar ul li a {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.navbar ul li a:hover {
+    background-color: #555;
+    color: white;
+}
+
+/* Styling the container */
+
+.footer {
+    text-align: center;
+    background-color: #333;
+    color: white;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+ul{
+    list-style: none; /* Remove bullets */
+            padding: 0; 
+            color:pink ;
+            font-size: larger;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-weight: bolder;
+}
+p{
+    font-size: medium;
+}
+div a{
+    text-decoration: none;
+    margin-right: 5px;
+    padding: 10px 10px;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+}
+
+.fnt{
+text-align: center;
+background-color:gray;
+padding: 10px 10px;
+color: black;
+margin: 0 600px 0 600px;
+
+}
