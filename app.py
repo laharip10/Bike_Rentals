@@ -100,6 +100,7 @@ models_to_insert = [('Ninja 300', 'Kawasaki', 2021),
 # Usage:
 insert_multiple_models(models_to_insert)
 #insert bike 
+
 def insert_multiple_bikes(bikes):
     conn = sqlite3.connect('bike_rental.db')
     cursor = conn.cursor()
@@ -334,85 +335,87 @@ def delete_rent(rental_id):
     finally:
         conn.close()
     return redirect('/rent')
-# Route to display bike models
-@app.route('/model')
-def display_bike_models():
+
+
+# customer table display
+@app.route('/customer')
+def display_customer_table():
     conn = sqlite3.connect('bike_rental.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM Models')
-    models = cursor.fetchall()
+    cursor.execute('SELECT * FROM Customers')
+    data = cursor.fetchall()
     conn.close()
-    return render_template('model.html', models=models)
+    return render_template('customer.html', customers=data)
 
-# Route to add a new bike model
-@app.route('/add_model', methods=['GET', 'POST'])
-def add_model():
-    conn = sqlite3.connect('bike_rental.db')
-    cursor = conn.cursor()
-
+# Route for adding a new customer
+@app.route('/customer_add', methods=['GET', 'POST'])
+def add_customer():
     if request.method == 'POST':
-        model_name = request.form['model_name']
-        manufacturer = request.form['manufacturer']
-        year = int(request.form['year'])
-        
-        current_year = datetime.now().year
-        
-        if year > current_year:
-            conn.close()
-            return "Year should not be greater than the current year"
-        else:
-            cursor.execute('''
-                INSERT INTO Models (Model_Name, Manufacturer, Year)
-                VALUES (?, ?, ?)
-            ''', (model_name, manufacturer, year))
-            
-            conn.commit()
-            conn.close()
-            return redirect('/model')
-    
-    conn.close()
-    return render_template('model_add.html')
+        # Retrieve form data
+        customer_name = request.form['customer_name']
+        contact_number = request.form['contact_number']
+        email = request.form['email']
 
-# Route to edit a bike model
-@app.route('/edit_model/<int:model_id>', methods=['GET', 'POST'])
-def edit_model(model_id):
-    conn = sqlite3.connect('bike_rental.db')
-    cursor = conn.cursor()
-
-    if request.method == 'POST':
-        model_name = request.form['model_name']
-        manufacturer = request.form['manufacturer']
-        year = request.form['year']
-        
-        cursor.execute('''
-            UPDATE Models
-            SET Model_Name=?, Manufacturer=?, Year=?
-            WHERE Model_ID=?
-        ''', (model_name, manufacturer, year, model_id))
-        
-        conn.commit()
-        conn.close()  # Close connection after commit
-        return redirect('/model')
-    
-    cursor.execute('SELECT * FROM Models WHERE Model_ID=?', (model_id,))
-    bike_model = cursor.fetchone()
-    conn.close()  # Close connection after fetching data
-    return render_template('model_edit.html', model=bike_model)
-
-
-@app.route('/delete_model/<int:model_id>')
-def delete_model(model_id):
-    try:
+        # Insert new customer into the database
         conn = sqlite3.connect('bike_rental.db')
         cursor = conn.cursor()
-        cursor.execute('''DELETE FROM Models WHERE Model_ID = ?''', (model_id,))
+        cursor.execute('''
+            INSERT INTO Customers (Customer_Name, Contact_Number, Email)
+            VALUES ( ?, ?, ?)
+        ''', ( customer_name, contact_number, email))
         conn.commit()
+        conn.close()
+
+        return redirect('/customer')  # Redirect to customer table after adding
+
+    return render_template('customer_add.html')  # Render the add customer form
+#edit customer infromation
+@app.route('/customer_edit/<int:customer_id>', methods=['GET', 'POST'])
+def edit_customer(customer_id):
+    if request.method == 'POST':
+        # Retrieve form data
+        customer_name = request.form['customer_name']
+        customer_phone = request.form['customer_phone']
+        customer_email = request.form['customer_email']
+
+        # Update the customer information in the database
+        conn = sqlite3.connect('bike_rental.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+            UPDATE Customers
+            SET  Customer_Name=?, Contact_Number=?, Email=?
+            WHERE Customer_ID=?
+        ''', (customer_name, customer_phone, customer_email, customer_id))
+        conn.commit()
+        conn.close()
+
+        return redirect('/customer')  # Redirect to customers table after editing
+    
+    # Fetch the customer data for the given ID
+    conn = sqlite3.connect('bike_rental.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM Customers WHERE Customer_ID = ?', (customer_id,))
+    customer_data = cursor.fetchone()
+    conn.close()
+    return render_template('customer_edit.html', customer=customer_data)
+
+
+#route for deleting a customer
+@app.route('/customer_delete/<int:customer_id>')
+def delete_customer(customer_id):
+    try:
+        conn = sqlite3.connect('bike_rental.db')  # Replace 'your_database.db' with your database name
+        cursor = conn.cursor()
+        cursor.execute('''DELETE FROM Customers WHERE Customer_ID = ?''', (customer_id,))
+        conn.commit()
+        conn.close()
     except sqlite3.Error as e:
         print("SQLite error:", e)
-        # Handle the error appropriately (rollback transaction, log, etc.)
+        # Handle the error as needed
     finally:
         conn.close()
-    return redirect('/model')
+
+    return redirect('/customer')  # Redirect to customers page after deletion
 
 @app.route('/bike')
 def display_bike_table():
@@ -508,87 +511,125 @@ def delete_bike(bike_id):
     finally:
         conn.close()
     return redirect('/bike')
- 
 
-# customer table display
-@app.route('/customer')
-def display_customer_table():
+
+
+
+# Route to display bike models
+@app.route('/model')
+def display_bike_models():
     conn = sqlite3.connect('bike_rental.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM Customers')
-    data = cursor.fetchall()
+    cursor.execute('SELECT * FROM Models')
+    models = cursor.fetchall()
     conn.close()
-    return render_template('customer.html', customers=data)
+    return render_template('model.html', models=models)
 
-# Route for adding a new customer
-@app.route('/customer_add', methods=['GET', 'POST'])
-def add_customer():
+# Route to add a new bike model
+@app.route('/add_model', methods=['GET', 'POST'])
+def add_model():
+    conn = sqlite3.connect('bike_rental.db')
+    cursor = conn.cursor()
+
     if request.method == 'POST':
-        # Retrieve form data
-        customer_name = request.form['customer_name']
-        contact_number = request.form['contact_number']
-        email = request.form['email']
-
-        # Insert new customer into the database
-        conn = sqlite3.connect('bike_rental.db')
-        cursor = conn.cursor()
-        cursor.execute('''
-            INSERT INTO Customers (Customer_Name, Contact_Number, Email)
-            VALUES ( ?, ?, ?)
-        ''', ( customer_name, contact_number, email))
-        conn.commit()
-        conn.close()
-
-        return redirect('/customer')  # Redirect to customer table after adding
-
-    return render_template('customer_add.html')  # Render the add customer form
-#edit customer infromation
-@app.route('/customer_edit/<int:customer_id>', methods=['GET', 'POST'])
-def edit_customer(customer_id):
-    if request.method == 'POST':
-        # Retrieve form data
-        customer_name = request.form['customer_name']
-        customer_phone = request.form['customer_phone']
-        customer_email = request.form['customer_email']
-
-        # Update the customer information in the database
-        conn = sqlite3.connect('bike_rental.db')
-        cursor = conn.cursor()
-        cursor.execute('''
-            UPDATE Customers
-            SET  Customer_Name=?, Contact_Number=?, Email=?
-            WHERE Customer_ID=?
-        ''', (customer_name, customer_phone, customer_email, customer_id))
-        conn.commit()
-        conn.close()
-
-        return redirect('/customer')  # Redirect to customers table after editing
+        model_name = request.form['model_name']
+        manufacturer = request.form['manufacturer']
+        year = int(request.form['year'])
+        
+        current_year = datetime.now().year
+        
+        if year > current_year:
+            conn.close()
+            return "Year should not be greater than the current year"
+        else:
+            cursor.execute('''
+                INSERT INTO Models (Model_Name, Manufacturer, Year)
+                VALUES (?, ?, ?)
+            ''', (model_name, manufacturer, year))
+            
+            conn.commit()
+            conn.close()
+            return redirect('/model')
     
-    # Fetch the customer data for the given ID
+    conn.close()
+    return render_template('model_add.html')
+
+# Route to edit a bike model
+@app.route('/edit_model/<int:model_id>', methods=['GET', 'POST'])
+def edit_model(model_id):
     conn = sqlite3.connect('bike_rental.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM Customers WHERE Customer_ID = ?', (customer_id,))
-    customer_data = cursor.fetchone()
-    conn.close()
-    return render_template('customer_edit.html', customer=customer_data)
 
-
-#route for deleting a customer
-@app.route('/customer_delete/<int:customer_id>')
-def delete_customer(customer_id):
-    try:
-        conn = sqlite3.connect('bike_rental.db')  # Replace 'your_database.db' with your database name
-        cursor = conn.cursor()
-        cursor.execute('''DELETE FROM Customers WHERE Customer_ID = ?''', (customer_id,))
+    if request.method == 'POST':
+        model_name = request.form['model_name']
+        manufacturer = request.form['manufacturer']
+        year = request.form['year']
+        
+        cursor.execute('''
+            UPDATE Models
+            SET Model_Name=?, Manufacturer=?, Year=?
+            WHERE Model_ID=?
+        ''', (model_name, manufacturer, year, model_id))
+        
         conn.commit()
-        conn.close()
+        conn.close()  # Close connection after commit
+        return redirect('/model')
+    
+    cursor.execute('SELECT * FROM Models WHERE Model_ID=?', (model_id,))
+    bike_model = cursor.fetchone()
+    conn.close()  # Close connection after fetching data
+    return render_template('model_edit.html', model=bike_model)
+
+
+@app.route('/delete_model/<int:model_id>')
+def delete_model(model_id):
+    try:
+        conn = sqlite3.connect('bike_rental.db')
+        cursor = conn.cursor()
+        cursor.execute('''DELETE FROM Models WHERE Model_ID = ?''', (model_id,))
+        conn.commit()
     except sqlite3.Error as e:
         print("SQLite error:", e)
-        # Handle the error as needed
+        # Handle the error appropriately (rollback transaction, log, etc.)
     finally:
         conn.close()
+    return redirect('/model')
+ 
 
-    return redirect('/customer')  # Redirect to customers page after deletion
+#join queries
+@app.route('/count')
+def count_bike():
+    conn = sqlite3.connect('bike_rental.db')
+    cursor = conn.cursor()
+    query = '''SELECT B.Bike_ID, RD.Customer_ID, COUNT(RD.Bike_ID) AS rental_count
+        FROM Bikes B 
+        LEFT JOIN Rental RD ON B.Bike_ID = RD.Bike_ID 
+        GROUP BY B.Bike_ID having count(RD.Bike_ID)>=1
+    '''
+    cursor.execute(query)
+    joined_data = cursor.fetchall()
+    conn.close()
+
+    return render_template('count.html', joined_data=joined_data)
+@app.route('/cust_bike')
+def custbike():
+    conn = sqlite3.connect('bike_rental.db')  # Replace with your database name
+    cursor = conn.cursor()
+
+    query = '''
+        SELECT DISTINCT C.Customer_ID, B.Bike_Name, R.Total_cost
+        FROM Customers C
+        JOIN Bikes B ON B.Bike_ID = R.Bike_ID
+        JOIN Rental R ON C.Customer_ID = R.Customer_ID
+        Group by B.Bike_ID
+
+    '''
+    cursor.execute(query)
+    unique_combinations = cursor.fetchall()
+    conn.close()
+    return render_template('cust_bike.html', unique_combinations=unique_combinations)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
