@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Customer details</title>
+    <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit.css') }}">
+    <script>
+        function goBack() {
+          window.history.back();
+        }
+      </script>
+</head>
+<body>
+    <h1>Edit Customer</h1>
+    <form method="post">
+        <label for="customer_name">Customer Name:</label>
+        <input type="text" id="customer_name" name="customer_name" value="{{ customer[1] }}" required><br>
+        <label for="customer_phone">Customer Phone:</label>
+        <input type="text" id="customer_phone" name="customer_phone" value="{{ customer[2] }}" required><br>
+        <label for="customer_email">Customer Email:</label>
+        <input type="email" id="customer_email" name="customer_email" value="{{ customer[3] }}" pattern="[a-zA-Z0-9._%+-]+@gmail\.com" required><br>
+        <div>
+            <button type="submit">Update
+            </button>
+            <button type="back" onclick="goBack()">Go Back</button>
+        </div>
+        
+
+    </form>
+</body>
+</html>
