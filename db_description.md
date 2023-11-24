@@ -37,6 +37,7 @@
 ## Bikes Table Functional Dependencies:
 * Bike_ID -> Bike_Name, Model_ID, Bike_Status, Daily_Rental_Rate
 * Model_ID -> Bike_Name, Bike_Status, Daily_Rental_Rate (Derived from the foreign key relationship)
+  <br>
 ## Customers Table Functional Dependencies:
 * Customer_ID -> Customer_Name, Contact_Number, Email
 ## Rental Table Functional Dependencies:
