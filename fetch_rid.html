@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rental Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='table.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='body.css') }}">
+
+    <style>
+        /* Add CSS styles for card-like display */
+        
+.rental-card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.rental-info {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Styles for individual elements within the card */
+.rental-card h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.rental-card p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.rental-card strong {
+    font-weight: bold;
+}
+
+    </style>
+</head>
+<body>
+    <h1>Rental Details</h1>
+    <div class="rental-info">
+        {% for rental_info in rental_info %}
+            <div class="rental-card">
+                <h3>Rental ID: {{ rental_info[0] }}</h3>
+                <p><strong>Customer Name:</strong> {{ rental_info[1] }}</p>
+                <p><strong>Bike Name:</strong> {{ rental_info[2] }}</p>
+                <p><strong>Manufacture:</strong> {{ rental_info[3] }}</p>
+
+                <p><strong>Rent per Day:</strong> {{ rental_info[4] }}</p>
+                <!-- Add more details or customize the structure as needed -->
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
