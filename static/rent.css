@@ -1,0 +1,77 @@
+tr td:first-of-type a {
+    text-decoration: none;
+    color: blue; /* Link color */
+}
+
+tr td:first-of-type a:hover {
+    text-decoration: underline; /* Underline on hover */
+    color: navy; /* Link color on hover */
+}
+
+#searchBtn {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+    background-color: #fff;
+    height: 30px; /* Match the height of the search box */
+    box-sizing: border-box;
+    font-size: 18px; /* Adjust size as needed */
+    line-height: 1;
+    display: inline-block;
+}
+
+#searchInput {
+    height: 30px; 
+    width:200px;/* Set the height of the search box */
+    padding: 10px; /* Adjust padding as needed */
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+    font-size: 18px; /* Adjust size as needed */
+    line-height: 1;
+    display: inline-block;
+
+}
+
+.search-container {
+    display: flex;
+    align-items: center; /* Vertically align elements */
+    justify-content: center; /* Horizontally align elements */
+    margin-bottom: 20px; /* Adjust margin as needed */
+}
+/* CSS for search form */
+.search-container {
+    display: flex;
+    align-items: center;
+    padding: 10px; 
+    border: none;/* Adding padding to the form container */
+}
+
+/* Adjust margin and padding for form elements */
+.search-container input[type="text"],
+.search-container input[type="submit"],
+.search-container button {
+    margin-left: 30px; /* Adding margin between elements */
+    padding: 10px; /* Adding padding to the input fields and buttons */
+}
+
+/* Optional: Adjust styling for buttons */
+.search-container input[type="submit"],
+.search-container button {
+    background-color: #4CAF50;
+    color:black;
+    border: none;
+    cursor: pointer;
+}
+
+.search-container input[type="submit"]:hover,
+.search-container button:hover {
+    background-color: #45a049;
+}
+
+/* Optional: Style for the "No data found" message */
+.search-container p {
+    margin-top: 10px;
+    color: #ff0000; /* Red color for emphasis */
+}
