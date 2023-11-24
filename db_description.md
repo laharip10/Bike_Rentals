@@ -8,20 +8,25 @@
 ## Models Table: 
 * This table details various bike models available for rental, storing information like Model_ID (unique identifier), Model_Name (the model's name), Manufacturer (the brand producing the model), and Year (the manufacturing year of the model).
 <br>
+
 ![Sample Data](https://github.com/laharip10/Bike_Rentals/blob/main/media/Models.png)
 
 ## Bikes Table:
 * Acting as the inventory manager, the Bikes table keeps track of individual bikes. It contains Bike_ID (unique identifier), Bike_Name (name or identifier for the bike), Model_ID (referencing the specific bike model from the Models table), Bike_Status (indicating whether the bike is available, not available), and Daily_Rental_Rate (the cost per day for renting the bike).
 <br>
+
 ![Sample Data](https://github.com/laharip10/Bike_Rentals/blob/main/media/Bikes.png)
 
 ## Customers Table:
 * This table stores information about customers utilizing the rental service. It holds Customer_ID (unique identifier), Customer_Name (customer's name), Contact_Number (contact information), and Email (customer's email address).
 <br>
+
 ![Sample Data](https://github.com/laharip10/Bike_Rentals/blob/main/media/Customers.png)
 
 ## Rental Table:
 * This pivotal table records the rental transactions. It includes Rental_ID (unique identifier), Bike_ID (referencing the specific bike rented), Customer_ID (identifying the customer involved in the rental), Rent_Start_Date, Rent_End_Date (indicating the start and end dates of the rental), and Total_Cost (the overall cost incurred for the rental period).
+<br>
+
 ![Sample Data](https://github.com/laharip10/Bike_Rentals/blob/main/media/Rental.png)
 
 # Functional Dependencies
