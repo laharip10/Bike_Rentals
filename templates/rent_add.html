@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Rental</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='add.css') }}">
+    <script>
+        function validateDates() {
+            var startDate = new Date(document.getElementById('rent_start_date').value);
+            var endDate = new Date(document.getElementById('rent_end_date').value);
+
+            if (endDate < startDate) {
+                alert("End date should be greater than or equal to the start date");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h1>Add Rental Information</h1>
+    <form action="/rent_add" method="post" onsubmit="return validateDates()">
+        <!-- Your form fields -->
+        <label for="bike_id">Bike ID:</label>
+        <select id="bike_id" name="bike_id" required>
+            {% for bike_id in bike_ids %}
+                <option value="{{ bike_id[0] }}">{{ bike_id[0] }}</option>
+            {% endfor %}
+        </select>
+        <label for="customer_id">Customer ID:</label>
+        <select id="customer_id" name="customer_id" required>
+            {% for customer_id in customer_ids %}
+                <option value="{{ customer_id[0] }}">{{ customer_id[0] }}</option>
+            {% endfor %}
+        </select>
+        <label for="rent_start_date">Rent Start Date:</label>
+        <input type="date" id="rent_start_date" name="rent_start_date" value="{{ today_date }}" required>
+        <label for="rent_end_date">Rent End Date:</label>
+        <input type="date" id="rent_end_date" name="rent_end_date" required><br>
+        <button type="submit">Submit</button> 
+    </form>
+</body>
+</html>

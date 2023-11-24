@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rental Reports </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='rent.css') }}">    
+    <link rel="stylesheet" href="{{ url_for('static', filename='table.css') }}">
+
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Rental Details Management</h1>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/customer">Customers</a></li>
+            <li><a href="/bike">Bikes</a></li>
+            <li><a href="/model">Models</a></li>
+        </ul>
+    </nav>
+    <h1>Rental Information</h1>
+    <form method="post" action="/rent" class="search-container">
+        <input type="text" id="searchInput" class="magnifier" name="searchInput" placeholder="Search by Rental ID">
+        <input type="submit" value="Search" id="searchBtn" name="search" >
+    </form>
+    <a href="/rent_add"><button>Add Rentals</button></a>
+    {% if not rental %}
+        <p>No data found</p>
+    {% else %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Rental ID</th>
+                    <th>Bike ID</th>
+                    <th>Customer ID</th>
+                    <th>Rent Start Date</th>
+                    <th>Rent End Date</th>
+                    <th>Total Cost</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through rental data and display each row -->
+                {% for rental in rental %}
+                    <tr>
+                        <td ><a class="link" href="/fetch_rid/{{ rental[0] }}">{{ rental[0] }}</a></td>
+                        <td>{{ rental[1] }}</td>
+                        <td>{{ rental[2] }}</td>
+                        <td>{{ rental[3] }}</td>
+                        <td>{{ rental[4] }}</td>
+                        <td>{{ rental[5] }}</td>
+                        <td>
+                            <a href="/rent_edit/{{rental[0]}}">Edit</a>
+                            <a href="/rent_delete/{{ rental[0] }}" onclick="return confirm('Are you sure you want to delete this report?')">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const searchValue = document.getElementById('searchInput').value;
+            fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'searchInput=' + encodeURIComponent(searchValue)
+            })
+            .then(response => response.json())
+            .then(data => {
+                displaySearchResults(data);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    
+        function displaySearchResults(rentals) {
+            const tableBody = document.createElement('tbody');
+            rentals.forEach(rental => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><a class="link" href="/fetch_rid/${rental.rental_id}">${rental.rental_id}</a></td>
+                    <td>${rental.bike_id}</td>
+                    <td>${rental.customer_id}</td>
+                    <td>${rental.rent_start_date}</td>
+                    <td>${rental.rent_end_date}</td>
+                    <td>${rental.total_cost}</td>
+                    <td>
+                        <a href="/rent_edit/${rental.rental_id}">Edit</a>
+                        <a href="/rent_delete/${rental.rental_id}" onclick="return confirm('Are you sure you want to delete this report?')">Delete</a>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+    
+            const rentalTable = document.getElementById('rentalTable');
+            const existingTableBody = rentalTable.getElementsByTagName('tbody')[0];
+            if (existingTableBody) {
+                rentalTable.removeChild(existingTableBody);
+            }
+            rentalTable.appendChild(tableBody);
+        }
+        
+    </script>
+</body>
+</html>
