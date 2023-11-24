@@ -100,6 +100,7 @@ models_to_insert = [('Ninja 300', 'Kawasaki', 2021),
 # Usage:
 insert_multiple_models(models_to_insert)
 #insert bike 
+import sqlite3
 
 def insert_multiple_bikes(bikes):
     conn = sqlite3.connect('bike_rental.db')
@@ -336,6 +337,9 @@ def delete_rent(rental_id):
         conn.close()
     return redirect('/rent')
 
+
+
+    
 
 # customer table display
 @app.route('/customer')
@@ -628,8 +632,24 @@ def custbike():
     unique_combinations = cursor.fetchall()
     conn.close()
     return render_template('cust_bike.html', unique_combinations=unique_combinations)
-
-
+@app.route('/manf')
+def subquery_manf():
+    conn=sqlite3.connect('bike_rental.db')
+    cursor=conn.cursor()
+    query='''
+    SELECT Customers.Customer_ID, Customers.Customer_Name
+FROM Customers
+WHERE Customers.Customer_ID IN (
+    SELECT Rental.Customer_ID
+    FROM Rental
+    GROUP BY Rental.Customer_ID
+    HAVING COUNT(DISTINCT Rental.Bike_ID) > 1
+)
+    '''
+    cursor.execute(query)
+    man_combinations= cursor.fetchall()
+    conn.close()
+    return render_template('sub.html', man_combinations=man_combinations)
 
 if __name__ == '__main__':
     app.run(debug=True)
