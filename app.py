@@ -139,11 +139,201 @@ bikes_to_insert = [
 # Usage:
 insert_multiple_bikes(bikes_to_insert)
 
+def insert_multiple_customers(customers):
+    conn = sqlite3.connect('bike_rental.db')
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT COUNT(*) FROM Customers')
+    count = cursor.fetchone()[0]
+
+    if count == 0:
+        cursor.executemany('''
+            INSERT INTO Customers (Customer_Name, Contact_Number, Email)
+            VALUES (?, ?, ?)
+        ''', customers)
+
+        conn.commit()
+
+    conn.close()
+
+# Example customer data for insertion
+customers_to_insert = [
+    ('John Doe', 1234567890, 'john@gmail.com'),
+    ('Alice Smith', 9876543210, 'alice@gmail.com'),
+    ('Bob Johnson', 5678901234, 'bob@gmail.com'),
+    ('Keerti',7867772290,'keer98@gmail.com'),
+    ('sunny Smith', 9876543210, 'asunne@gmail.com'),
+
+]
+
+# Usage:
+insert_multiple_customers(customers_to_insert)
+
+
+
 # Home page
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
+@app.route('/rent', methods=['GET', 'POST'])
+def display_rental_table():
+    conn = sqlite3.connect('bike_rental.db')
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        search_input = request.form['searchInput']
+        cursor.execute("SELECT * FROM Rental WHERE Rental_ID LIKE ?", ('%' + search_input + '%',))
+        data = cursor.fetchall()
+        conn.close()
+        if not data:
+            return render_template('rent.html', rental=[])
+        return render_template('rent.html', rental=data, search_input=search_input)
+    else:
+        cursor.execute('SELECT * FROM Rental')
+        data = cursor.fetchall()
+        conn.close()
+        if not data:
+            return render_template('rent.html', rental=[])
+        return render_template('rent.html', rental=data)
+
+
+# Function to connect to SQLite database
+
+
+@app.route('/rent_add', methods=['GET', 'POST'])
+def rent_add():
+    if request.method == 'POST':
+        try:
+            # Generating a random rental ID with 3 digits
+            rental_id = str(random.randint(100, 99999))
+
+            bike_id = request.form['bike_id']
+            customer_id = request.form['customer_id']
+            rent_start_date = request.form['rent_start_date']
+            rent_end_date = request.form['rent_end_date']
+
+            # Fetch daily rental rate from the database
+            conn = sqlite3.connect('bike_rental.db')
+            cursor = conn.cursor()
+            cursor.execute('SELECT Daily_Rental_Rate FROM Bikes WHERE Bike_ID = ?', (bike_id,))
+            rental_rate = cursor.fetchone()[0]
+            conn.close()
+            
+            # Calculate rental duration
+            rental_duration = (datetime.strptime(rent_end_date, '%Y-%m-%d') - datetime.strptime(rent_start_date, '%Y-%m-%d')).days
+
+            # Calculate total cost
+            total_cost = rental_duration * rental_rate
+
+            # Insert new rental information into the database
+            conn = sqlite3.connect('bike_rental.db')
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO Rental (Rental_ID, Bike_ID, Customer_ID, Rent_Start_Date, Rent_End_Date, Total_Cost)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ''', (rental_id, bike_id, customer_id, rent_start_date, rent_end_date, total_cost))
+            conn.commit()
+            conn.close()
+            return redirect('/rent')  # Redirect to rental table after adding
+        except Exception as e:
+            # Print the error for debugging purposes
+            print("Error:", e)
+            return "An error occurred while adding the rental information."
+
+    # Fetch bike IDs from the database
+    conn = sqlite3.connect('bike_rental.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT Bike_ID FROM Bikes WHERE Bike_Status="Available" ')
+    bike_ids = cursor.fetchall()
+
+    # Fetch customer IDs from the database
+    cursor.execute('SELECT Customer_ID FROM Customers')
+    customer_ids = cursor.fetchall()
+
+    conn.close()
+    return render_template('rent_add.html', bike_ids=bike_ids, customer_ids=customer_ids)
+
+
+def get_rental_details(rental_id):
+    conn = sqlite3.connect('bike_rental.db')
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT Rental.rental_id,customers.customer_name, bikes.bike_Name, Models.Manufacturer, bikes.daily_rental_rate
+        FROM Rental
+        JOIN bikes ON Rental.bike_id = bikes.bike_id
+        JOIN customers ON Rental.customer_id = customers.customer_id
+        JOIN models ON models.Model_id=bikes.model_id
+        WHERE rental.rental_id = ?
+    ''', (rental_id,))
+    
+    rental_info = cursor.fetchall()
+
+    conn.close()
+
+    return rental_info
+
+@app.route('/fetch_rid/<rental_id>')
+def display_rental_details(rental_id):
+    rental_info = get_rental_details(rental_id)
+    return render_template('fetch_rid.html', rental_info=rental_info)
+
+
+@app.route('/rent_edit/<rental_id>', methods=['GET', 'POST'])
+def rent_edit(rental_id):
+    if request.method == 'POST':
+        try:
+            conn = sqlite3.connect('bike_rental.db')
+            cursor = conn.cursor()
+
+            bike_id = request.form['bike_id']
+            customer_id = request.form['customer_id']
+            rent_start_date = request.form['rent_start_date']
+            rent_end_date = request.form['rent_end_date']
+
+            cursor.execute('SELECT Daily_Rental_Rate FROM Bikes WHERE Bike_ID = ?', (bike_id,))
+            rental_rate = cursor.fetchone()[0]
+
+            rental_duration = (datetime.strptime(rent_end_date, '%Y-%m-%d') - datetime.strptime(rent_start_date, '%Y-%m-%d')).days
+            total_cost = rental_duration * rental_rate
+
+            cursor.execute('''
+                UPDATE Rental 
+                SET Bike_ID = ?, Customer_ID = ?, Rent_Start_Date = ?, Rent_End_Date = ?, Total_Cost = ?
+                WHERE Rental_ID = ?
+            ''', (bike_id, customer_id, rent_start_date, rent_end_date, total_cost, rental_id))
+            conn.commit()
+            conn.close()
+            return redirect('/rent')  # Redirect to rental table after editing
+        except Exception as e:
+            print("Error:", e)
+            return "An error occurred while editing the rental information."
+
+    conn = sqlite3.connect('bike_rental.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT Bike_ID, Customer_ID, Rent_Start_Date, Rent_End_Date ,Total_cost FROM Rental WHERE Rental_ID = ?', (rental_id,))
+    rental_info = cursor.fetchone()
+    conn.close()
+    return render_template('rent_edit.html', rental_info=rental_info)
+
+
+
+#delete rental information
+@app.route('/rent_delete/<int:rental_id>')
+def delete_rent(rental_id):
+    try:
+        conn = sqlite3.connect('bike_rental.db')
+        cursor = conn.cursor()
+        cursor.execute('''DELETE FROM Rental WHERE Rental_ID = ?''', (rental_id,))
+        conn.commit()
+    except sqlite3.Error as e:
+        print("SQLite error:", e)
+        # Consider rolling back the transaction or handling the error accordingly
+    finally:
+        conn.close()
+    return redirect('/rent')
 # Route to display bike models
 @app.route('/model')
 def display_bike_models():
