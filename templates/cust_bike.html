@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Unique Combinations of Customers and Bikes</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='edit.css') }}">
+
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 80%;
+      margin: 20px auto;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Rental information of each Customers Bikes group by bike_id </h2>
+<table>
+  <tr>
+    <th>Customer ID</th>
+    <th>Bike Name</th>
+    <th>Total cost</th>
+  </tr>
+  {% for row in unique_combinations %}
+  <tr>
+    <td>{{ row[0] }}</td>
+    <td>{{ row[1] }}</td>
+    <td>{{ row[2] }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+</body>
+</html>
