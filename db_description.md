@@ -30,14 +30,16 @@
 ![Sample Data](https://github.com/laharip10/Bike_Rentals/blob/main/media/rental.png)
 
 # Functional Dependencies
-Models Table Functional Dependencies:
+<br>
+
+## Models Table Functional Dependencies:
 * Model_ID -> Model_Name, Manufacturer, Year
-Bikes Table Functional Dependencies:
+## Bikes Table Functional Dependencies:
 * Bike_ID -> Bike_Name, Model_ID, Bike_Status, Daily_Rental_Rate
 * Model_ID -> Bike_Name, Bike_Status, Daily_Rental_Rate (Derived from the foreign key relationship)
-Customers Table Functional Dependencies:
+## Customers Table Functional Dependencies:
 * Customer_ID -> Customer_Name, Contact_Number, Email
-Rental Table Functional Dependencies:
+## Rental Table Functional Dependencies:
 * Rental_ID -> Bike_ID, Customer_ID, Rent_Start_Date, Rent_End_Date, Total_Cost
 * Bike_ID -> Customer_ID, Rent_Start_Date, Rent_End_Date, Total_Cost (Derived from the foreign key relationship)
 * Customer_ID -> Bike_ID, Rent_Start_Date, Rent_End_Date Total_Cost (Derived from the foreign key relationship)
