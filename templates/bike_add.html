@@ -29,7 +29,15 @@
         </select>
         <label for="daily_rental_rate">Daily Rental Rate:</label>
         <input type="text" id="daily_rental_rate" name="daily_rental_rate" required><br>
+        <div>
         <button type="submit">Submit</button>
+        <button type="back" onclick="goBack()">Back</button>
+        </div>
     </form>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 </body>
 </html>

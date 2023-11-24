@@ -18,7 +18,15 @@
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" pattern="[a-zA-Z0-9._%+-]+@gmail\.com" title="Please enter valid email" required>
         <br>
+        <div>
         <button type="submit">submit</button>
+        <button type="back" onclick="goBack()">Back</button>
+</div>
     </form>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 </body>
 </html>

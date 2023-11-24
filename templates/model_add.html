@@ -19,13 +19,21 @@
 
         <label for="year">Year:</label>
         <input type="number" id="year" name="year" required><br>
+        <div>
         <button type="submit">Submit</button>
+        <button type="back" onclick="goBack()">Back</button>
+        </div>     
         {% if error_message %}
         <div class="error-message">
             {{ error_message }}
         </div>
     {% endif %}
     </form>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
     
         
 </body>

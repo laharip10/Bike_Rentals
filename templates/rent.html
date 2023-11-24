@@ -22,8 +22,12 @@
     <form method="post" action="/rent" class="search-container">
         <input type="text" id="searchInput" class="magnifier" name="searchInput" placeholder="Search by Rental ID">
         <input type="submit" value="Search" id="searchBtn" name="search" >
+        <input type="submit" value="clear" id="searchBtn" name="clear" method="get" action="/rent">
+
     </form>
     <a href="/rent_add"><button>Add Rentals</button></a>
+
+
     {% if not rental %}
         <p>No data found</p>
     {% else %}
@@ -104,6 +108,7 @@
             rentalTable.appendChild(tableBody);
         }
         
+       
     </script>
 </body>
 </html>

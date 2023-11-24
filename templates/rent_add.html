@@ -37,7 +37,16 @@
         <input type="date" id="rent_start_date" name="rent_start_date" value="{{ today_date }}" required>
         <label for="rent_end_date">Rent End Date:</label>
         <input type="date" id="rent_end_date" name="rent_end_date" required><br>
-        <button type="submit">Submit</button> 
+        <div>
+        <button type="submit">Submit</button>
+        <button type="back" onclick="goBack()">Back</button>
+        </div>
+
     </form>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 </body>
 </html>

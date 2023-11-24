@@ -49,13 +49,13 @@ input,select
 
 
 /* Buttons container */
-button {
+div button {
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-top: 5px;
-    margin-left:150px;
+    margin-top: 10px;
+    margin-left:30px;
     align-content: center;
     transition: background-color 0.3s ease;
     background-color: #4CAF50;
@@ -65,6 +65,22 @@ button {
 
 button:hover {
     background-color: #0056b3;
+}
+
+button[type="button"] {
+    background-color: #ddd;
+    color: #333;
+    float:left;
+    
+
+}
+
+button[type="button"]:hover {
+    background-color: #bbb;
+}
+button[type="back"] {
+   float:right;
+   margin-right:30px;
 }
 
 
