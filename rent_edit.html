@@ -1,0 +1,43 @@
+<!-- rental_details_edit.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Rental details</title>
+    <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="{{url_for('static', filename='edit.css') }}">
+    <script>
+        function validateDates() {
+            var startDate = new Date(document.getElementById('rent_start_date').value);
+            var endDate = new Date(document.getElementById('rent_end_date').value);
+            if (endDate < startDate) {
+                alert("End date should be greater than or equal to the start date");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h1>Edit Rental Details</h1>
+    <form method="POST">
+        <label for="bike_id">Bike ID:</label>
+        <input type="text" id="bike_id" name="bike_id" value="{{ rental_info[0] }}"><br><br>
+
+        <label for="customer_id">Customer ID:</label>
+        <input type="text" id="customer_id" name="customer_id" value="{{ rental_info[1] }}"><br><br>
+
+        <label for="rent_start_date">Rent Start Date:</label>
+        <input type="date" id="rent_start_date" name="rent_start_date" value="{{ rental_info[2] }}"><br><br>
+
+        <label for="rent_end_date">Rent End Date:</label>
+        <input type="date" id="rent_end_date" name="rent_end_date" value="{{ rental_info[3] }}"><br><br>
+        
+        <div>
+            <button type="submit">Update
+            </button>
+            <button type="back" onclick="goBack()">Go Back</button>
+        </div>
+    </form>
+</body>
+</html>
