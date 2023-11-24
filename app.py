@@ -223,6 +223,101 @@ def delete_model(model_id):
     finally:
         conn.close()
     return redirect('/model')
+
+@app.route('/bike')
+def display_bike_table():
+    conn = sqlite3.connect('bike_rental.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM Bikes')
+    data = cursor.fetchall()
+    conn.close()
+    return render_template('bike.html', bikes=data)
+
+def generate_unique_number(existing_numbers):
+    while True:
+        # Generate a 5-digit random number
+        unique_number = random.randint(10000, 99999)
+        # Ensure uniqueness by checking against existing numbers
+        if unique_number not in existing_numbers:
+            return unique_number
+
+@app.route('/bike_add', methods=['GET', 'POST'])
+def add_bike():
+    conn = sqlite3.connect('bike_rental.db')
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        bike_name = request.form['bike_name']
+        model_id = request.form['model_id']
+        bike_status = request.form['bike_status']
+        daily_rental_rate = request.form['daily_rental_rate']
+
+        # Fetch existing bike numbers from the database
+        cursor.execute('SELECT Bike_ID FROM Bikes')
+        existing_numbers = {int(row[0]) for row in cursor.fetchall()}
+
+        # Generate a unique 5-digit number
+        unique_number = generate_unique_number(existing_numbers)
+
+        cursor.execute('''
+            INSERT INTO Bikes (Bike_ID, Bike_Name, Model_ID, Bike_Status, Daily_Rental_Rate)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (unique_number, bike_name, model_id, bike_status, daily_rental_rate))
+
+        conn.commit()
+        conn.close()
+        return redirect('/bike')
+
+    # Fetch Model IDs from the database
+    cursor.execute('SELECT Model_ID, Model_Name FROM Models')
+    model_ids = cursor.fetchall()
+    conn.close()
+    
+    return render_template('bike_add.html', model_ids=model_ids)
+
+
+@app.route('/bike_edit/<int:bike_id>', methods=['GET', 'POST'])
+def edit_bike(bike_id):
+    if request.method == 'POST':
+        # Retrieve form data
+        bike_name = request.form['bike_name']
+        model_id= request.form['model_id']
+        bike_status = request.form['bike_status']
+        daily_rental_rate = request.form['daily_rental_rate']
+        # Update the bike information in the database
+        conn = sqlite3.connect('bike_rental.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+            UPDATE Bikes
+            SET Bike_Name=?, Model_ID=?, Bike_Status=?, Daily_Rental_Rate=?
+            WHERE Bike_ID=?
+        ''', (bike_name, model_id, bike_status, daily_rental_rate, bike_id))
+        conn.commit()
+        conn.close()
+        return redirect('/bike')  # Redirect to bike table after editing
+    # Fetch the bike data for the given ID
+    conn = sqlite3.connect('bike_rental.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM Bikes WHERE Bike_ID = ?', (bike_id,))
+    bike_data = cursor.fetchone()
+    conn.close()
+    
+    return render_template('bike_edit.html', bike_data=bike_data)
+
+# Route for deleting a bike
+@app.route('/bike_delete/<int:bike_id>')
+def delete_bike(bike_id):
+    try:
+        conn = sqlite3.connect('bike_rental.db')
+        cursor = conn.cursor()
+        cursor.execute('''DELETE FROM Bikes WHERE Bike_ID = ?''', (bike_id,))
+        conn.commit()
+    except sqlite3.Error as e:
+        print("SQLite error:", e)
+        # Consider rolling back the transaction or handling the error accordingly
+    finally:
+        conn.close()
+    return redirect('/bike')
  
 
 if __name__ == '__main__':
