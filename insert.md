@@ -1,7 +1,7 @@
 # Insert Operations for Bike Rental System Tables
 
 ## Models Table
-```sql
+
 INSERT INTO Models (Model_Name, Manufacturer, Year)
 VALUES ('Ninja 300', 'Kawasaki', 2021),
     

@@ -1,7 +1,7 @@
 # Database Schema for Bike Rental System
 
 ## Models Table
-```sql
+
 CREATE TABLE IF NOT EXISTS Models(
     Model_ID INTEGER PRIMARY KEY AUTOINCREMENT,
     Model_Name TEXT NOT NULL,
