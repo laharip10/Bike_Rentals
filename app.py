@@ -320,6 +320,86 @@ def delete_bike(bike_id):
     return redirect('/bike')
  
 
+# customer table display
+@app.route('/customer')
+def display_customer_table():
+    conn = sqlite3.connect('bike_rental.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM Customers')
+    data = cursor.fetchall()
+    conn.close()
+    return render_template('customer.html', customers=data)
+
+# Route for adding a new customer
+@app.route('/customer_add', methods=['GET', 'POST'])
+def add_customer():
+    if request.method == 'POST':
+        # Retrieve form data
+        customer_name = request.form['customer_name']
+        contact_number = request.form['contact_number']
+        email = request.form['email']
+
+        # Insert new customer into the database
+        conn = sqlite3.connect('bike_rental.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO Customers (Customer_Name, Contact_Number, Email)
+            VALUES ( ?, ?, ?)
+        ''', ( customer_name, contact_number, email))
+        conn.commit()
+        conn.close()
+
+        return redirect('/customer')  # Redirect to customer table after adding
+
+    return render_template('customer_add.html')  # Render the add customer form
+#edit customer infromation
+@app.route('/customer_edit/<int:customer_id>', methods=['GET', 'POST'])
+def edit_customer(customer_id):
+    if request.method == 'POST':
+        # Retrieve form data
+        customer_name = request.form['customer_name']
+        customer_phone = request.form['customer_phone']
+        customer_email = request.form['customer_email']
+
+        # Update the customer information in the database
+        conn = sqlite3.connect('bike_rental.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+            UPDATE Customers
+            SET  Customer_Name=?, Contact_Number=?, Email=?
+            WHERE Customer_ID=?
+        ''', (customer_name, customer_phone, customer_email, customer_id))
+        conn.commit()
+        conn.close()
+
+        return redirect('/customer')  # Redirect to customers table after editing
+    
+    # Fetch the customer data for the given ID
+    conn = sqlite3.connect('bike_rental.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM Customers WHERE Customer_ID = ?', (customer_id,))
+    customer_data = cursor.fetchone()
+    conn.close()
+    return render_template('customer_edit.html', customer=customer_data)
+
+
+#route for deleting a customer
+@app.route('/customer_delete/<int:customer_id>')
+def delete_customer(customer_id):
+    try:
+        conn = sqlite3.connect('bike_rental.db')  # Replace 'your_database.db' with your database name
+        cursor = conn.cursor()
+        cursor.execute('''DELETE FROM Customers WHERE Customer_ID = ?''', (customer_id,))
+        conn.commit()
+        conn.close()
+    except sqlite3.Error as e:
+        print("SQLite error:", e)
+        # Handle the error as needed
+    finally:
+        conn.close()
+
+    return redirect('/customer')  # Redirect to customers page after deletion
+
 if __name__ == '__main__':
     app.run(debug=True)
     
