@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Bike</title>
+    <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit.css') }}">
+</head>
+<body>
+    <h1>Edit Bike</h1>
+    <form method="post">
+        <label for="bike_name">Bike name :</label>
+        <input type="bike_name" id="bike_name" name="bike_name" value="{{ bike_data[1]}}" selected><br>
+
+        <label for="model_id">Model ID:</label>
+        
+        <input type="model_id" id="model_id" name="model_id" value="{{ bike_data[2]}}" selected>
+          <br>      
+    
+        <label for="bike_status">Bike Status:</label>
+        <select id="bike_status" name="bike_status" required>
+            <option value="Available" {% if bike_data[3] == 'Available' %}selected{% endif %}>Available</option>
+            <option value="Not Available" {% if bike_data[3] == 'Not Available' %}selected{% endif %}>Not Available</option>
+        </select><br>
+        <label for="daily_rental_rate">Daily Rental Rate:</label>
+        <input type="text" id="daily_rental_rate" name="daily_rental_rate" value="{{ bike_data[4] }}" required>
+        <br>
+        <div>
+            <button type="submit">Update
+            </button>
+            <button type="back" onclick="goBack()">Go Back</button>
+        </div>
+    </form>
+</body>
+</html>
