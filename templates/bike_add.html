@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Bike</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='add.css') }}"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <h1>Add Bike</h1>
+    <form method="post" action="/bike_add">
+
+        <label for="bike_name">Bike Name:</label>
+        <select id="bike_name" name="bike_name" required>
+            {% set bike_types = ['Boss Hoss Cycles', 'Royal Enfield', 'Bajaj Auto', 'Rieju', 'BMW', 'Kawasaki', 'KTM'] %}
+            {% for option in bike_types %}
+            <option value="{{ option }}">{{ option }}</option>
+            {% endfor %}
+        </select>
+            <label for="model_id">Model ID:</label>
+            <select id="model_id" name="model_id" required>
+                {% for id, name in model_ids %}
+    <option value="{{ id }}">{{ id }} - {{ name }}</option>
+    {% endfor %}
+            </select>
+        <label for="bike_status">Bike Status:</label>
+        <select id="bike_status" name="bike_status" required>
+           <option value="Available">Available</option>
+           <option value="Not Available">Not Available</option>
+        </select>
+        <label for="daily_rental_rate">Daily Rental Rate:</label>
+        <input type="text" id="daily_rental_rate" name="daily_rental_rate" required><br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

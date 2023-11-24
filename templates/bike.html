@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bike Information</title>
+    <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='table.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Bike Details Management</h1>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/rent">Rentals</a></li>
+            <li><a href="/customer">Customers</a></li>
+            <li><a href="/model">Models</a></li>
+        </ul>
+    </nav>
+    <h1>Bike Information</h1>
+    <a href="/bike_add">
+        <button>Add Bike</button></a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Bike ID</th>
+                <th>Bike Name</th>
+                <th>Model ID</th>
+                <th>Bike Status</th>
+                <th>Daily Rental Rate</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bike in bikes %}
+            <tr>
+                <td>{{ bike[0] }}</td>
+                <td>{{ bike[1] }}</td>
+                <td>{{ bike[2] }}</td>
+                <td>{{ bike[3] }}</td>
+                <td>{{ bike[4] }}</td>
+                <td>
+                    <a href="/bike_edit/{{bike[0]}}">Edit</a>
+                    <a href="/bike_delete/{{ bike[0] }}" onclick="return confirm('Are you sure you want to delete this bike?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
