@@ -37,6 +37,7 @@
 ## Bikes Table Functional Dependencies:
 * Bike_ID -> Bike_Name, Model_ID, Bike_Status, Daily_Rental_Rate
 * Model_ID -> Bike_Name, Bike_Status, Daily_Rental_Rate (Derived from the foreign key relationship)
+  <br>
 ## Customers Table Functional Dependencies:
 * Customer_ID -> Customer_Name, Contact_Number, Email
 ## Rental Table Functional Dependencies:
@@ -54,9 +55,11 @@ The Models table has no transitive dependencies or partial dependencies. Each no
 Bikes Table:
 Bike_ID: Primary key, uniquely identifying each bike.
 Bike_Name, Model_ID, Bike_Status, Daily_Rental_Rate: All attributes depend on the primary key (Bike_ID) and are not transitively dependent on each other. The Model_ID links to the Models table. Thus, this table satisfies 3NF.
+
 Customers Table:
 Customer_ID: Primary key, uniquely identifying each customer.
 Customer_Name, Contact_Number, Email: All attributes depend solely on the primary key (Customer_ID). Therefore, this table satisfies 3NF.
+
 Rental Table:
 Rental_ID: Primary key, uniquely identifying each rental entry.
 Bike_ID, Customer_ID, Rent_Start_Date, Rent_End_Date, Total_Cost: All attributes are dependent on the primary key (Rental_ID) and not transitively dependent on each other. The Bike_ID and Customer_ID fields maintain relationships with the Bikes and Customers tables, respectively. Thus, this table satisfies 3NF.
