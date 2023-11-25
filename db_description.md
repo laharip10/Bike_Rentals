@@ -73,3 +73,5 @@ This is established by the foreign key constraint in the Rental table that refer
 ## 3) Many-to-One relationship between Bikes and Rental tables:
 Many rentals can involve one bike, but each rental involves only one bike (in the given schema).
 This is established by the foreign key constraint in the Rental table that references the Bikes table (Bike_ID in Rental references Bike_ID in Bikes).
+
+
