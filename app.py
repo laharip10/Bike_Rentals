@@ -49,7 +49,6 @@ with app.app_context():
             Rent_Start_Date DATE,
             Rent_End_Date DATE,
             Total_Cost DECIMAL(10, 2),
-            FOREIGN KEY (Rental_ID) REFERENCES Rental(Rental_ID),
             FOREIGN KEY (Bike_ID) REFERENCES Bikes(Bike_ID),
             FOREIGN KEY (Customer_ID) REFERENCES Customers(Customer_ID)
         )''')
