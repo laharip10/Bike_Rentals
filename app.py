@@ -99,9 +99,8 @@ models_to_insert = [('Ninja 300', 'Kawasaki', 2021),
 
 # Usage:
 insert_multiple_models(models_to_insert)
-#insert bike 
-import sqlite3
 
+#insert bike 
 def insert_multiple_bikes(bikes):
     conn = sqlite3.connect('bike_rental.db')
     cursor = conn.cursor()
@@ -600,7 +599,7 @@ def delete_model(model_id):
     return redirect('/model')
  
 
-#join queries
+#join queries count the number of rentals for each bike
 @app.route('/count')
 def count_bike():
     conn = sqlite3.connect('bike_rental.db')
@@ -616,8 +615,9 @@ def count_bike():
 
     return render_template('count.html', joined_data=joined_data)
 @app.route('/cust_bike')
+#SQL query to retrieve information about customers, their rented bikes, and the total cost of rentals
 def custbike():
-    conn = sqlite3.connect('bike_rental.db')  # Replace with your database name
+    conn = sqlite3.connect('bike_rental.db')  
     cursor = conn.cursor()
 
     query = '''
@@ -633,6 +633,7 @@ def custbike():
     conn.close()
     return render_template('cust_bike.html', unique_combinations=unique_combinations)
 @app.route('/manf')
+# customers who have rented more than one unique bike
 def subquery_manf():
     conn=sqlite3.connect('bike_rental.db')
     cursor=conn.cursor()
