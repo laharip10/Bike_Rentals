@@ -516,7 +516,6 @@ def delete_bike(bike_id):
 
 
 
-
 # Route to display bike models
 @app.route('/model')
 def display_bike_models():
