@@ -4,7 +4,6 @@
 1) Lahari Padiri (https://github.com/laharip10)
 2) Chaitanyasai Kotturi (https://github.com/CHaitanya66)
 3) Showkath Ali Shaik (https://github.com/ShoukathShaik)
-<br>
 Youtube video [Youtube_Video](https://youtu.be/nr44GgGGSZk)
 <br>
 * Integrated a robust tech stack comprising HTML, CSS, JavaScript, Flask, and SQLite3. The core of the system is powered by a well-defined database schema, as illustrated in the provided SQL commands. The Models, Bikes, Customers, and Rental tables lay the foundation for structured data management. HTML structures the user interface, creating dynamic web pages for customers to interact with. CSS enhances the aesthetics and ensures a visually appealing and responsive design.
